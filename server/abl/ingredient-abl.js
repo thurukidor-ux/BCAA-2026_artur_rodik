@@ -1,11 +1,10 @@
-const path = require("path");
-const Ajv = require("ajv");
-const addFormats = require("ajv-formats");
 const ingredientDao = require("../dao/ingredient-dao.js");
 const { v4: uuidv4 } = require("uuid");
+const Ajv = require("ajv");
+const addFormats = require("ajv-formats");
+
 const ajv = new Ajv();
 addFormats(ajv);
-
 
 const schema = {
     type: "object",
@@ -15,56 +14,42 @@ const schema = {
         unit: { type: "string" }
     },
     required: ["name", "unit"],
-    // additionalProperties: false,
 };
 
-async function create(req, res) {
-    console.log("ABL: Přijat požadavek na vytvoření");
+function create(req, res) {
+    console.log("ABL: Start create s daty:", req.body);
     try {
         let ingredient = req.body;
         ingredient.id = uuidv4();
 
         const valid = ajv.validate(schema, ingredient);
         if (!valid) {
-            res.status(400).json({
-                code: "dtoInIsNotValid",
-                message: "dtoIn is not valid",
-                validationError: ajv.errors,
-            });
-            return;
+            console.log("ABL: Validace selhala");
+            return res.status(400).json({ code: "dtoInIsNotValid", errors: ajv.errors });
         }
 
-
-        const list = ingredientDao.list();
-        const exists = list.find((i) => i.name === ingredient.name);
-        if (exists) {
-            res.status(400).json({
-                code: "ingredientAlreadyExists",
-                message: `Ingredient with name ${ingredient.name} already exists`,
-            });
-            return;
+        const all = ingredientDao.list();
+        if (all.some(i => i.name === ingredient.name)) {
+            console.log("ABL: Ingredience již existuje");
+            return res.status(400).json({ code: "ingredientAlreadyExists" });
         }
 
+        const savedIngredient = ingredientDao.create(ingredient);
+        console.log("ABL: Úspěšně uloženo přes DAO");
 
-        ingredient = ingredientDao.create(ingredient);
-
-
-        res.json(ingredient);
+        res.json(savedIngredient);
     } catch (e) {
+        console.error("ABL ERROR (create):", e);
         res.status(500).json({ message: e.message });
     }
 }
 
-async function get(req, res) {
+function get(req, res) {
     try {
-        const { id } = req.query;
+        const id = req.query.id;
         const ingredient = ingredientDao.get(id);
         if (!ingredient) {
-            res.status(404).json({
-                code: "ingredientNotFound",
-                message: `Ingredient with id ${id} not found`,
-            });
-            return;
+            return res.status(404).json({ code: "ingredientNotFound" });
         }
         res.json(ingredient);
     } catch (e) {
@@ -73,13 +58,49 @@ async function get(req, res) {
 }
 
 function list(req, res) {
-    const ingredients = ingredientDao.list();
-    res.json(ingredients);
+    try {
+        const ingredients = ingredientDao.list();
+        res.json(ingredients);
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
 }
 
 
-module.exports = {
-    create,
-    get,
-    list
-};
+function updateStock(req, res) {
+    try {
+        const { id, amount } = req.body;
+
+
+        if (typeof amount !== "number" || amount <= 0) {
+            return res.status(400).json({
+                code: "invalidAmount",
+                message: "Množství musí být kladné číslo."
+            });
+        }
+
+        const ingredient = ingredientDao.get(id);
+        if (!ingredient) {
+            return res.status(404).json({ code: "ingredientNotFound" });
+        }
+
+
+        ingredient.quantityInStock = (ingredient.quantityInStock || 0) + amount;
+
+
+        const updatedIngredient = ingredientDao.create(ingredient);
+
+        res.json({
+            message: "Zásoby byly úspěšně doplněny.",
+            ingredient: updatedIngredient
+        });
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+}
+
+
+
+
+
+module.exports = { create, get, list, updateStock };

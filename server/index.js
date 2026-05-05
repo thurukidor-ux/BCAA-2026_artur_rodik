@@ -1,18 +1,17 @@
 const express = require('express');
 const ingredientAbl = require("./abl/ingredient-abl");
+const recipeAbl = require("./abl/recipe-abl");
 
 const app = express();
-const port = 3000;
-
-// Klíčové pro zpracování JSONu z Thunder Clienta
 app.use(express.json());
 
-// Routy
 app.get('/ingredient/list', ingredientAbl.list);
 app.post('/ingredient/create', ingredientAbl.create);
 app.get('/ingredient/get', ingredientAbl.get);
+app.post('/ingredient/updateStock', ingredientAbl.updateStock);
 
-app.listen(port, () => {
-    console.log(`Server běží na http://localhost:${port}`);
-    console.log(`Zkuste POST na http://localhost:3000/ingredient/create`);
-});
+app.post('/recipe/create', recipeAbl.create);
+app.get('/recipe/list', recipeAbl.list);
+app.post('/recipe/cook', recipeAbl.cook);
+
+app.listen(3000, () => console.log(`Server běží na portu Artur Rodik`));
