@@ -1,22 +1,34 @@
 const express = require('express');
-const ingredientAbl = require("./abl/ingredient-abl");
-const recipeAbl = require("./abl/recipe-abl");
 
-const IngredientSearchAbl = require("./abl/ingredient/searchAbl");//
+
+const IngredientSearchAbl = require("./abl/ingredient/searchAbl");
+const IngredientCreateAbl = require("./abl/ingredient/createAbl");
+const IngredientListAbl = require("./abl/ingredient/listAbl");
+const IngredientUpdateStockAbl = require("./abl/ingredient/updateStockAbl");
+const IngredientgetAbl = require("./abl/ingredient/getAbl");
+
+const recipeCookAbl = require("./abl/recipe/cookAbl");
+const recipeCreateAbl = require("./abl/recipe/createAbl");
+const recipeSearchAbl = require("./abl/recipe/searchAbl");
+const recipeListAbl = require("./abl/recipe/listAbl");
 
 const app = express();
 app.use(express.json());
 
-app.get('/ingredient/list', ingredientAbl.list);
-app.post('/ingredient/create', ingredientAbl.create);
-app.get('/ingredient/get', ingredientAbl.get);
-app.post('/ingredient/updateStock', ingredientAbl.updateStock);
-
+app.post("/ingredient/create", IngredientCreateAbl);
 app.get("/ingredient/search", IngredientSearchAbl);
+app.get("/ingredient/list", IngredientListAbl);
+app.post("/ingredient/updateStock", IngredientUpdateStockAbl);
+app.get('/ingredient/get', IngredientgetAbl);
 
-app.post('/recipe/create', recipeAbl.create);
-app.get('/recipe/list', recipeAbl.list);
-app.post('/recipe/cook', recipeAbl.cook);
-app.get('/recipe/search', recipeAbl.search);
+app.post('/recipe/cook', recipeCookAbl);
+app.post('/recipe/create', recipeCreateAbl);
+app.get('/recipe/search', recipeSearchAbl);
+app.get('/recipe/list', recipeListAbl);
+
+
+
+
+
 
 app.listen(3000, () => console.log(`Server běží na portu Artur Rodik`));
