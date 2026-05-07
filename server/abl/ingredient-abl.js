@@ -102,5 +102,4 @@ function updateStock(req, res) {
 
 
 
-
 module.exports = { create, get, list, updateStock };
