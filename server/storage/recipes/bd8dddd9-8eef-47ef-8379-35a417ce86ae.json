@@ -1,0 +1,16 @@
+{
+  "name": "Citronové bonbony",
+  "description": "Sladkokyselé domácí bonbony z čerstvé šťávy.",
+  "instruction": "Svařte cukr s citronovou šťávou na sirup, nechte ztuhnout ve formičkách.",
+  "ingredientsList": [
+    {
+      "ingredientId": "e20a1912-5625-45d8-9d87-cd28c486c272",
+      "amount": 2
+    },
+    {
+      "ingredientId": "62b08c00-425c-49c7-b033-bf491ac7f8f9",
+      "amount": 100
+    }
+  ],
+  "id": "bd8dddd9-8eef-47ef-8379-35a417ce86ae"
+}
