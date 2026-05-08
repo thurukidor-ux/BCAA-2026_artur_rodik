@@ -1,0 +1,35 @@
+# Evidence receptů a ingrediencí - Backend
+
+Tento projekt je backendová aplikace pro správu kuchařských receptů a sledování zásob surovin na skladě.
+
+## Business Case
+Aplikace řeší problém domácího plánování vaření. Umožňuje uživateli evidovat dostupné ingredience (cukr, citrony) a recepty. Hlavní přidanou hodnotou je funkce "Cook", která automaticky zkontroluje stav skladu a odečte suroviny po "uvaření" receptu.
+
+## Instalace a spuštění
+1. Nainstalujte závislosti: `npm install`
+2. Spusťte aplikaci: `node app.js`
+3. Server běží na: `http://localhost:3000`
+
+## Dokumentace API endpointů
+
+### Ingredience
+- **POST `/ingredient/create`**: Vytvoří novou surovinu (validace jména přes AJV).
+- **POST `/ingredient/updateStock`**: Navýší počet kusů na skladě (přičte k aktuálnímu stavu).
+- **GET `/ingredient/list`**: Seznam všech dostupných surovin.
+- **GET `/ingredient/get?id=...`**: Detail jedné suroviny.
+- **GET `/ingredient/search?name=...`**: Vyhledávání surovin podle názvu.
+
+### Recepty
+- **POST `/recipe/create`**: Vytvoří recept (kontroluje, zda ingredience existují).
+- **POST `/recipe/cook`**: Odečte suroviny z receptu ze skladu ingrediencí.
+- **GET `/recipe/list`**: Seznam všech receptů.
+- **GET `/recipe/search?text=...`**: Vyhledávání v názvech a popisech receptů.
+
+## Technická architektura
+Projekt využívá třívrstvou architekturu:
+1. **Controller (app.js)**: Definice rout a základní směrování.
+2. **Business Logika (ABL)**: Samostatné soubory pro každou operaci (např. `cookAbl.js`), které obsahují validaci (AJV) a logiku.
+3. **Data Access (DAO)**: Moduly `ingredient-dao.js` a `recipe-dao.js` pro práci s JSON soubory v adresáři `storage/`.
+
+---
+Autor: Artur Rodik
