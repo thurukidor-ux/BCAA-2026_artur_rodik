@@ -1,5 +1,5 @@
 const express = require('express');
-
+const cors = require('cors');
 
 const IngredientSearchAbl = require("./abl/ingredient/searchAbl");
 const IngredientCreateAbl = require("./abl/ingredient/createAbl");
@@ -12,8 +12,14 @@ const recipeCreateAbl = require("./abl/recipe/createAbl");
 const recipeSearchAbl = require("./abl/recipe/searchAbl");
 const recipeListAbl = require("./abl/recipe/listAbl");
 
+
+
+
+
 const app = express();
 app.use(express.json());
+app.use(cors());//...
+
 
 app.post("/ingredient/create", IngredientCreateAbl);
 app.get("/ingredient/search", IngredientSearchAbl);

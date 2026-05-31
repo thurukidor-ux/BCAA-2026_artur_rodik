@@ -1,1 +1,6 @@
-{"name":"cukr","unit":"g","quantityInStock":1500,"id":"62b08c00-425c-49c7-b033-bf491ac7f8f9"}
+{
+  "name": "cukr",
+  "unit": "g",
+  "quantityInStock": 1200,
+  "id": "62b08c00-425c-49c7-b033-bf491ac7f8f9"
+}

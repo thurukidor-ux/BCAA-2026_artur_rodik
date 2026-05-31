@@ -1,16 +1,19 @@
 const ingredientDao = require("../../dao/ingredient-dao.js");
 
+
+
 function updateStock(req, res) {
     try {
         const { id, amount } = req.body;
 
 
-        if (typeof amount !== "number" || amount <= 0) {
+        if (typeof amount !== "number" || amount === 0) {
             return res.status(400).json({
                 code: "invalidAmount",
-                message: "Množství musí být kladné číslo."
+                message: "Množství musí být nenulové číslo (kladné pro přidání, záporné pro ubrání)."
             });
         }
+
 
         const ingredient = ingredientDao.get(id);
         if (!ingredient) {
@@ -18,13 +21,22 @@ function updateStock(req, res) {
         }
 
 
-        ingredient.quantityInStock = (ingredient.quantityInStock || 0) + amount;
+        const newQuantity = (ingredient.quantityInStock || 0) + amount;
+
+        if (newQuantity < 0) {
+            return res.status(400).json({
+                code: "insufficientStock",
+                message: `Nelze ubrat takové množství. Na skladě je pouze ${ingredient.quantityInStock || 0}.`
+            });
+        }
 
 
+        ingredient.quantityInStock = newQuantity;
         const updatedIngredient = ingredientDao.create(ingredient);
 
+
         res.json({
-            message: "Zásoby byly úspěšně doplněny.",
+            message: "Sklad byl úspěšně aktualizován.",
             ingredient: updatedIngredient
         });
     } catch (e) {

@@ -1,0 +1,20 @@
+{
+  "name": "pasta carbonara",
+  "description": "uvarit testoviny 10 minut, orestovat slaninu, pak pridat zloutek",
+  "instruction": "Vařte s láskou",
+  "ingredientsList": [
+    {
+      "ingredientId": "41c0039f-d998-4715-b036-66c83bccf0f1",
+      "amount": 100
+    },
+    {
+      "ingredientId": "61918dee-2f33-4ccc-8763-06276ede0043",
+      "amount": 1
+    },
+    {
+      "ingredientId": "ab8ad152-73d8-469d-8127-173421aff8d9",
+      "amount": 20
+    }
+  ],
+  "id": "c4eefdd5-5b60-4539-bca4-4714336e6c0b"
+}
